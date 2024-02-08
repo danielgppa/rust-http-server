@@ -22,6 +22,16 @@ use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
             }
         }
 
+        fn get_next_word(request: &str) -> Option<(&str, &str)> {
+            for (i, c) in request.chars().enumerate() {
+                if c == ' ' {
+                    return Some((&request[..i], &request[i + 1..]));
+                }
+            }
+
+            None
+        }
+
         pub enum ParseError {
             InvalidRequest,
             InvalidEncoding,
@@ -61,9 +71,7 @@ use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
         impl Error for ParseError {}
 
         trait Encrypt {
-            fn encrypt(&self) -> Self {
-                unimplemented!()
-            }
+            fn encrypt(&self) -> Self;
         }
 
         impl Encrypt for &[u8] {
