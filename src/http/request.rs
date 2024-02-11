@@ -1,7 +1,7 @@
 use::std::str;
 use crate::http::request;
 use std::str::Utf8Error;
-use super::method::Method;
+use super::method::{Method, MethodError};
 use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
@@ -25,6 +25,8 @@ use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
                 if protocol != "HTTP/1.1" {
                     return Err(ParseError::InvalidProtocol);
                 }
+
+                let method: Method = method.parse()?;
 
                 unimplemented!()
             }
@@ -55,6 +57,12 @@ use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
                     Self::InvalidProtocol => "Invalid Protocol",
                     Self::InvalidMethod => "Invalid Method",
                 }
+            }
+        }
+
+        impl From<MethodError> for ParseError {
+            fn from(_: MethodError) -> Self {
+                Self::InvalidMethod
             }
         }
 
