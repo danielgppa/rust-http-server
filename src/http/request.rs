@@ -5,10 +5,11 @@ use super::method::{Method, MethodError};
 use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
+use super::QueryString;
 
         pub struct Request<'buf> {
             path: &'buf str,
-            query_string: Option<&'buf str>,
+            query_string: Option<QueryString<'buf>>,
             method: Method,
         }
 
@@ -31,7 +32,7 @@ use std::fmt::{self, Debug, Display, Formatter, Result as FmtResult};
                 let mut query_string = None;
 
                 if let Some(i) = path.find('?') {
-                    query_string = Some(&path[i + 1..]);
+                    query_string = Some(QueryString::from(&path[i + 1..]));
                     path = &path[..i];
                 }
 
